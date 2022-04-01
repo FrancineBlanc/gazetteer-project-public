@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png">
+    <link rel="manifest" href="./assets/favicon/site.webmanifest">
+    <link rel="stylesheet" href="./assets/bootstrap-5.0.0-beta1-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="./assets/leaflet/leaflet.css">
+    <link rel="stylesheet" href="./assets/Leaflet.markercluster-1.4.1/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="./assets/Leaflet.markercluster-1.4.1/dist/MarkerCluster.Default.css">
+    <link rel="stylesheet" href="./assets/cdnjs/easy-button.css">
+    <link rel="stylesheet" href="./assets/Leaflet.extra-markers/dist/css/leaflet.extra-markers.min.css">
+    <script src="./assets/leaflet/leaflet.js"></script>
+    <script src="./scripts/leaflet-providers.js"></script>
+    <script src="./assets/Leaflet.markercluster-1.4.1/dist/leaflet.markercluster.js"></script>
+    <script src="./assets/cdnjs/easy-button.js"></script>
+    <script src="./assets/Leaflet.extra-markers/dist/js/leaflet.extra-markers.min.js"></script>
+    <title>Gazetteer</title>
+</head>
+
+<body>
+    <div id="preloader"></div>
+    <div class="spinner-border spinner-border-sm text-success" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <select class="form-select" id="countries" aria-label=".form-select-sm example"></select>
+    <div id="mainMapId"></div>
+    <div class="modal fade" id="countryModal" tabindex="-1" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title w-100 text-center" id="country-modal-label"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="countries-data">
+                    <table class="table table-striped" id="country-table">
+                        <tbody>
+                            <tr>
+                                <td>Capital:</td>
+                                <td id="capital" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Continent:</td>
+                                <td id="continent" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Currency:</td>
+                                <td id="currency" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Area:</td>
+                                <td id="area" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Population:</td>
+                                <td id="population" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Language(s):</td>
+                                <td id="language" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Demonym:</td>
+                                <td id="demonym" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Calling Code(s):</td>
+                                <td id="codes" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Neighbour(s):</td>
+                                <td id="neighbours" class="right-align-cell"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="holidaysModal" tabindex="-1" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title w-100 text-center" id="holidays-modal-label"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="holidays">
+                    <div id="no-holiday-data">No public holiday data available for this country</div>
+                    <table class="table table-striped" id="holiday-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th colspan="2">Date</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="holiday-details"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="humanDevModal" tabindex="-1" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title w-100 text-center" id="human-dev-modal-label"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="human-development">
+                    <div id="no-human-dev-data">No human development data available for this country</div>
+                    <table class="table table-striped" id="human-dev-data">
+                        <tbody>
+                            <tr>
+                                <td>Life Expectancy at Birth (females):</td>
+                                <td id="female-life" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Life Expectancy at Birth (males):</td>
+                                <td id="male-life" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Expected years of schooling:</td>
+                                <td id="expected-schooling" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Mean years of schooling:</td>
+                                <td id="mean-schooling" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Gross domestic product (GDP) ($ billions):</td>
+                                <td id="gdp" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Gross national income (GNI) per capita:</td>
+                                <td id="gni" class="right-align-cell"></td>
+                            </tr>
+                            <tr>
+                                <td>Human Development Index Rank:</td>
+                                <td id="human-dev-rank" class="right-align-cell"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="topNewsModal" tabindex="-1" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title w-100 text-center" id="top-news-modal-label"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="news-data">
+                    <div id="no-news-data">No news data available for this country</div>
+                    <table class="table table-striped" id="news-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Source</th>
+                            </tr>
+                        </thead>
+                        <tbody id="news-details"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="weather-modal" tabindex="-1" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title w-100 text-center" id="weather-modal-label"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modal-weather">
+                    <div id="no-weather-data">No Weather data available</div>
+                    <table class="table table-striped" id="weather-table">
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Description</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="weather-details"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./assets/bootstrap-5.0.0-beta1-dist/js/bootstrap.min.js"></script>
+    <script src="./scripts/jquery-3.5.1.js"></script>
+    <script src="./scripts/scripts.js"></script>
+</body>
+
+</html>

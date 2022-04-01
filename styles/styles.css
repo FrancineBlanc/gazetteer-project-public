@@ -1,0 +1,46 @@
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    overflow: hidden;
+    background: white url("../assets/images/spinner.gif") no-repeat center;
+}
+body {
+    margin: 0;
+}
+html, body, #mainMapId {
+    height: 100%;
+    width: 100vw;
+}
+.form-select {
+    width: 10%;
+}
+@media (hover: none) {
+    .leaflet-tooltip-pane { display: none; }
+}
+.spinner-border {
+    left: 50vw;
+    top: 50vh;
+    position: fixed;
+    width: 5rem;
+    height: 5rem;
+    z-index: 998;
+}
+.right-align-cell {
+    text-align: right;
+}
+#modal-header-text {
+    line-height: 50px;
+}
+#header-flag, #flag {
+    float: left;
+}
+#countries {
+    position: absolute;
+    z-index: 999;
+    right: 0;
+    width: 200px;
+}
